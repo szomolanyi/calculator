@@ -3,10 +3,12 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="FE base">
+    <meta name="description" content="Calculator">
     <meta name="author" content="Robert Szomolanyi">
 
-    <title>Fe base</title>
+    <title>Calc</title>
+    <link rel="stylesheet" type="text/css"
+          href="https://fonts.googleapis.com/css?family=Orbitron">
     <!--
     <link rel="stylesheet" type="text/css" href="main.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
@@ -14,7 +16,44 @@
     -->
 </head>
 <body>
-    <h1>FE Base page</h1>
+    <div class="container">
+        <div class="box">
+            <div class="display">
+                <div id="d-up">0</div>
+                <div id="d-down">0</div>
+            </div>
+            <div class="keyboard">
+            <div class="buttons">
+                <button class="btn-red-ll btn-act-ll">C</button>
+                <button class="btn-red-l btn-act-l">CE</button>
+                <button class="btn-blue-r btn-act-r">%</button>
+                <button class="btn-blue-rr btn-act-rr">/</button>
+            </div>
+            <div class="buttons">
+                <button class="btn-white-ll btn-act-ll">7</button>
+                <button class="btn-white-l btn-act-l">8</button>
+                <button class="btn-white-r btn-act-r">9</button>
+                <button class="btn-blue-rr btn-act-rr">x</button>
+            </div>
+            <div class="buttons">
+                <button class="btn-white-ll btn-act-ll">4</button>
+                <button class="btn-white-l btn-act-l">5</button>
+                <button class="btn-white-r btn-act-r">6</button>
+                <button class="btn-blue-rr btn-act-rr">-</button>
+            </div>
+            <div class="buttons">
+                <button class="btn-white-ll btn-act-ll">1</button>
+                <button class="btn-white-l btn-act-l">2</button>
+                <button class="btn-white-r btn-act-r">3</button>
+                <button class="btn-blue-rr btn-act-rr">+</button>
+            </div>
+            <div class="buttons">
+                <button class="btn-wide btn-white-l btn-act-ll">0</button>
+                <button class="btn-white btn-act">.</button>
+                <button class="btn-wide btn-red-r btn-act-rr">=</button>
+            </div>
+        </div>
+    </div>
     <script src="bundle.js"></script>
 </body>
 </html>

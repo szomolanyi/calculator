@@ -1,2 +1,3 @@
-Base repository for FE projects
+Html calculator : Free Code Camp chalenge
+
 
