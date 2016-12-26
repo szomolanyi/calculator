@@ -1,6 +1,7 @@
 var webpack = require("webpack");
 
 module.exports = {
+    devtool: "source-map",
     entry: "./src/index.js",  //náš vstupní bod aplikace
     output: {
         filename: "bundle.js"   //výstupní balík všech zdrojových kódů

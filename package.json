@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "webpack": "webpack",
-    "devserver": "webpack-dev-server --inline"
+    "devserver": "webpack-dev-server -d --watch"
   },
   "author": "Robert Szomolanyi",
   "license": "BSD-2-Clause",

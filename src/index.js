@@ -1,8 +1,7 @@
 require("./styles/style.css");
 require("jquery");
 var keys={
-    49: 
-
+    49: '1'
 };
 var state = {
     c_num: "0",
@@ -58,10 +57,11 @@ function make_operand(o) {
     };*/
 }
 function make_operator(o) {
-    ret = {
+    var ret = {
         type: 'operator'
     };
     Object.assign(ret, state.opers[o]);
+    return ret;
     /*
     return {
         type: 'operator',
@@ -70,7 +70,7 @@ function make_operator(o) {
 }
 function stmt_toString() {
     return state.stmt.reduce(function(res, e) {
-        return res.concat(e.value.s);
+        return res.concat(e.s);
     }, '');
 }
 function handle_num(e) {
@@ -97,9 +97,9 @@ function make_rpn() {
             output.push(state.stmt[i]);
         }
         else {
-            var priority=state.stmt[i].value.prior;
+            var priority=state.stmt[i].prior;
             if (stack.length > 0) {
-                var stack_priority=stack[stack.length-1].value.prior;
+                var stack_priority=stack[stack.length-1].prior;
                 if (priority <= stack_priority) {
                     output.push(stack.pop());
                 }
@@ -121,11 +121,11 @@ function resolve_rpn(rpn) {
         else {
             var o1=stack.pop();
             var o2=stack.pop();
-            var onew=rpn[i].value.exec(o1.value.s, o2.value.s);
+            var onew=rpn[i].exec(o1.s, o2.s);
             stack.push(make_operand(onew));
         }
     }
-    return stack[0].value.s;
+    return stack[0].s;
 }
 function handle_exec() {
     state.stmt.push(make_operand(state.c_num));
