@@ -50,7 +50,8 @@ body {
     overflow: hidden;
     font-size: 12px;
     overflow-wrap: break-word;
-    height: 32px
+    height: 32px;
+    padding-top: 5px;
 }
 .buttons {
     margin-left: 12px;
@@ -95,6 +96,21 @@ button.btn-act-r:active {
     box-shadow: inset -1px 2px 2px 0px rgba(0,0,0,0.9);   
 }
 button.btn-act-rr:active {
+    box-shadow: inset -2px 2px 2px 0px rgba(0,0,0,0.9);   
+}
+button.btn-act.active {
+    box-shadow: inset 0px 2px 2px 0px rgba(0,0,0,0.9);   
+}
+button.btn-act-ll.active {
+    box-shadow: inset 2px 2px 2px 0px rgba(0,0,0,0.9);   
+}
+button.btn-act-l.active {
+    box-shadow: inset 1px 2px 2px 0px rgba(0,0,0,0.9);   
+}
+button.btn-act-r.active {
+    box-shadow: inset -1px 2px 2px 0px rgba(0,0,0,0.9);   
+}
+button.btn-act-rr.active {
     box-shadow: inset -2px 2px 2px 0px rgba(0,0,0,0.9);   
 }
 button.btn-white-ll {
