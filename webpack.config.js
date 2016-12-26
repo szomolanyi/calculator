@@ -1,3 +1,5 @@
+var webpack = require("webpack");
+
 module.exports = {
     entry: "./src/index.js",  //náš vstupní bod aplikace
     output: {
@@ -16,5 +18,12 @@ module.exports = {
                 loader: 'eslint-loader'
             }
         ]
-    }
+    },
+    plugins: [
+        new webpack.ProvidePlugin({
+            $: "jquery",
+            jQuery: "jquery",
+            "window.jQuery": "jquery"
+        })
+    ]
 };
