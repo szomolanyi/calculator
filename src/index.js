@@ -35,9 +35,9 @@ var state = {
             s: '/'
         },
         '%' : {
-            prior: 1,
+            prior: 3,
             exec: function(o1, o2) {
-                return o1+o2;
+                return (o1*o2)/100;
             },
             s: '%'
         }
