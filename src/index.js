@@ -1,6 +1,7 @@
 require("./styles/style.css");
 require("jquery");
 var state = {
+    precision: 1000000000000,
     calc_done: false,
     c_num: null,
     stmt : [],
@@ -95,6 +96,7 @@ var state = {
             this.stmt.push(this.make_operand(this.c_num));
             var rpn=this.make_rpn();
             this.c_num=this.resolve_rpn(rpn);
+            this.c_num=Math.round(parseFloat(this.c_num)*this.precision)/this.precision.toString();
             this.calc_done=true;
             this.render();
         }
@@ -164,7 +166,6 @@ function handle_num(e) {
     $(this).blur();
 }
 function handle_oper() {
-    console.log('handle_oper: '+ this.outerText);
     state.handle_oper(this.outerText);
     $(this).blur();
 }
@@ -176,7 +177,6 @@ function handle_key_down(e) {
     $('button#'+e.which).toggleClass('active');
 }
 function handle_key_up(e) {
-    console.log('handle_key_up:'+e.which);
     $('button#'+e.which).removeClass('active');
     if (e.which >= 96 && e.which <= 105) state.handle_num((e.which-96).toString());
     switch (e.which) {
