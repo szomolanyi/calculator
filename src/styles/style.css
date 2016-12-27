@@ -69,6 +69,12 @@ button {
     font-size: 14px;
     color: rgba(0,0,0,0.8);
     text-shadow: 0px 0px 1px rgba(0,0,0,1);
+    -webkit-appearance: none;
+    -moz-appearance:    none;
+    appearance:         none;
+}
+button::-moz-focus-inner {
+  border: 0;
 }
 button.btn-wide {
     width: 82px;
