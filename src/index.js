@@ -68,7 +68,7 @@ var state = {
             $('#d-down').html(this.stmt.reduce(function(res, e) {
                 return res.concat(e.s);
             }, ''));
-        $('#dbg').html(JSON.stringify(this.stmt, null, 2));
+        //$('#dbg').html(JSON.stringify(this.stmt, null, 2));
     },
     handle_num: function(num) {
         if (this.calc_done) {
