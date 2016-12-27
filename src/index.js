@@ -4,6 +4,7 @@ var state = {
     precision: 10000000000,
     max_decs: 11,
     calc_done: false,
+    calc_error: false,
     c_num: null,
     stmt : [],
     opers : {
@@ -60,6 +61,7 @@ var state = {
         this.c_num = null;
         this.stmt = [];
         this.calc_done = false;
+        this.calc_error = false;
     },
     render: function() {
         if (this.c_num === null) $('#d-up').html('0');
@@ -72,7 +74,13 @@ var state = {
             }, ''));
         //$('#dbg').html(JSON.stringify(this.stmt, null, 2));
     },
+    handle_error: function() {
+        if (this.calc_error) {
+            this.reset();
+        }
+    },
     handle_num: function(num) {
+        this.handle_error();
         if (this.calc_done) {
             this.reset();
         }
@@ -84,6 +92,7 @@ var state = {
         this.render();
     },
     handle_oper: function(o) {
+        this.handle_error();
         if (this.c_num === null) return;
         if (this.calc_done) {
             this.calc_done=false;
@@ -95,13 +104,17 @@ var state = {
         this.render();
     },
     handle_exec: function() {
-        if (this.c_num === null) return;
+        this.handle_error();
         if (!this.calc_done) {
             this.stmt.push(this.make_operand(this.c_num));
             var rpn=this.make_rpn();
             this.c_num=this.resolve_rpn(rpn);
-            this.c_num=Math.round(parseFloat(this.c_num)*this.precision)/this.precision.toString();
-            this.calc_done=true;
+            this.c_num=(Math.round(parseFloat(this.c_num)*this.precision)/this.precision).toString();
+            if (this.c_num.length > this.max_decs) {
+                this.c_num='Buffer overflow';
+                this.calc_error=true;
+            }
+            else this.calc_done=true;
             this.render();
         }
     },
@@ -148,6 +161,7 @@ var state = {
         this.render();
     },
     handle_ce: function() {
+        this.handle_error();
         if (!this.calc_done) {
             if (this.c_num != null) {
                 this.c_num=null;
@@ -161,6 +175,7 @@ var state = {
         }
     },
     handle_esc: function() {
+        this.handle_error();
         if (this.calc_done) this.handle_c();
         else this.handle_ce();
     }

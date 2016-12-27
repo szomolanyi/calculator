@@ -47,8 +47,10 @@
 	/* WEBPACK VAR INJECTION */(function($) {__webpack_require__(2);
 	__webpack_require__(1);
 	var state = {
-	    precision: 1000000000000,
+	    precision: 10000000000,
+	    max_decs: 11,
 	    calc_done: false,
+	    calc_error: false,
 	    c_num: null,
 	    stmt : [],
 	    opers : {
@@ -105,6 +107,7 @@
 	        this.c_num = null;
 	        this.stmt = [];
 	        this.calc_done = false;
+	        this.calc_error = false;
 	    },
 	    render: function() {
 	        if (this.c_num === null) $('#d-up').html('0');
@@ -117,15 +120,25 @@
 	            }, ''));
 	        //$('#dbg').html(JSON.stringify(this.stmt, null, 2));
 	    },
+	    handle_error: function() {
+	        if (this.calc_error) {
+	            this.reset();
+	        }
+	    },
 	    handle_num: function(num) {
+	        this.handle_error();
 	        if (this.calc_done) {
 	            this.reset();
 	        }
 	        if (this.c_num===null) this.c_num=num;
-	        else this.c_num+=num;
+	        else {
+	            if (this.max_decs > this.c_num.length)
+	                this.c_num+=num;
+	        }
 	        this.render();
 	    },
 	    handle_oper: function(o) {
+	        this.handle_error();
 	        if (this.c_num === null) return;
 	        if (this.calc_done) {
 	            this.calc_done=false;
@@ -137,13 +150,17 @@
 	        this.render();
 	    },
 	    handle_exec: function() {
-	        if (this.c_num === null) return;
+	        this.handle_error();
 	        if (!this.calc_done) {
 	            this.stmt.push(this.make_operand(this.c_num));
 	            var rpn=this.make_rpn();
 	            this.c_num=this.resolve_rpn(rpn);
-	            this.c_num=Math.round(parseFloat(this.c_num)*this.precision)/this.precision.toString();
-	            this.calc_done=true;
+	            this.c_num=(Math.round(parseFloat(this.c_num)*this.precision)/this.precision).toString();
+	            if (this.c_num.length > this.max_decs) {
+	                this.c_num='Buffer overflow';
+	                this.calc_error=true;
+	            }
+	            else this.calc_done=true;
 	            this.render();
 	        }
 	    },
@@ -190,6 +207,7 @@
 	        this.render();
 	    },
 	    handle_ce: function() {
+	        this.handle_error();
 	        if (!this.calc_done) {
 	            if (this.c_num != null) {
 	                this.c_num=null;
@@ -203,6 +221,7 @@
 	        }
 	    },
 	    handle_esc: function() {
+	        this.handle_error();
 	        if (this.calc_done) this.handle_c();
 	        else this.handle_ce();
 	    }
@@ -10516,7 +10535,7 @@
 	
 	
 	// module
-	exports.push([module.id, "h1 {\n    background-color: red;\n}\n\nbody {\n    background-color: #EEEEEE;\n}\n\n.container {\n    margin-top: 20px;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n.box {\n    background-color: #546E7A;\n    border-radius: 15px;\n    width: 296px;\n    height: 500px;\n    box-shadow: \n        inset -0px -5px 12px 2px #37474F,\n        0px 10px 8px 0px rgba(0, 0, 0, 0.5),\n        0px 5px 1px 0px #37474F;\n}\n\n.display {\n    margin-top: 40px;\n    background-color: #A1D2CE;\n    height: 80px;\n    margin-bottom: 30px;\n    margin-left: 20px;\n    margin-right: 20px;\n    box-shadow: \n        0px -3px 2px 3px #37474F,\n        inset 0px 0px 1px 4px rgba(0, 0, 0, 0.5);\n    font-family: \"Orbitron\";\n    font-weight: bold;\n    font-size: 24px;\n    text-align: right;\n}\n#d-up {\n    margin-left: 15px;\n    margin-right: 15px;\n    padding-top: 15px;\n    overflow: hidden;\n}\n#d-down {\n    margin-left: 15px;\n    margin-right: 15px;\n    overflow: hidden;\n    font-size: 12px;\n    overflow-wrap: break-word;\n    height: 22px;\n    padding-top: 5px;\n}\n.buttons {\n    margin-left: 12px;\n    margin-right: 12px;\n}\nbutton {\n    width: 48px;\n    height: 48px;\n    margin: 8px;\n    padding: 0px;\n    border-radius: 8px;\n    border-style: none;\n    font-family: \"Orbitron\";\n    font-weight: bold;\n    font-size: 14px;\n    color: rgba(0,0,0,0.8);\n    text-shadow: 0px 0px 1px rgba(0,0,0,1);\n    -webkit-appearance: none;\n    -moz-appearance:    none;\n    appearance:         none;\n}\nbutton::-moz-focus-inner {\n  border: 0;\n}\nbutton.btn-wide {\n    width: 82px;\n}\n\nbutton:focus {\n    outline: none;\n}\n.button-round {\n    box-shadow: \n        2px 3px 1px 0px #1A237E,\n        2px 3px 6px 0px rgba(0,0,0,0.8);   \n    background-color: #283593;\n}\nbutton.btn-act:active {\n    box-shadow: inset 0px 2px 2px 0px rgba(0,0,0,0.9);   \n}\nbutton.btn-act-ll:active {\n    box-shadow: inset 2px 2px 2px 0px rgba(0,0,0,0.9);   \n}\nbutton.btn-act-l:active {\n    box-shadow: inset 1px 2px 2px 0px rgba(0,0,0,0.9);   \n}\nbutton.btn-act-r:active {\n    box-shadow: inset -1px 2px 2px 0px rgba(0,0,0,0.9);   \n}\nbutton.btn-act-rr:active {\n    box-shadow: inset -2px 2px 2px 0px rgba(0,0,0,0.9);   \n}\nbutton.btn-act.active {\n    box-shadow: inset 0px 2px 2px 0px rgba(0,0,0,0.9);   \n}\nbutton.btn-act-ll.active {\n    box-shadow: inset 2px 2px 2px 0px rgba(0,0,0,0.9);   \n}\nbutton.btn-act-l.active {\n    box-shadow: inset 1px 2px 2px 0px rgba(0,0,0,0.9);   \n}\nbutton.btn-act-r.active {\n    box-shadow: inset -1px 2px 2px 0px rgba(0,0,0,0.9);   \n}\nbutton.btn-act-rr.active {\n    box-shadow: inset -2px 2px 2px 0px rgba(0,0,0,0.9);   \n}\nbutton.btn-white-ll {\n    box-shadow: \n        2px 3px 1px 0px #90A4AE,\n        2px 3px 6px 0px rgba(0,0,0,0.8);   \n    background-color: #CFD8DC;\n}\nbutton.btn-white-l {\n    box-shadow: \n        1px 3px 1px 0px #90A4AE,\n        1px 3px 6px 0px rgba(0,0,0,0.8);   \n    background-color: #CFD8DC;\n}\nbutton.btn-white {\n    box-shadow: \n        0px 3px 1px 0px #90A4AE,\n        0px 3px 6px 0px rgba(0,0,0,0.8);   \n    background-color: #CFD8DC;\n}\nbutton.btn-white-r {\n    box-shadow: \n        -1px 3px 1px 0px #90A4AE,\n        -1px 3px 6px 0px rgba(0,0,0,0.8);   \n    background-color: #CFD8DC;\n}\nbutton.btn-blue-rr {\n    box-shadow: \n        -2px 3px 1px 0px #1A237E,\n        -2px 3px 6px 0px rgba(0,0,0,0.8);   \n    background-color: #283593;\n    color: rgba(255,255,255,0.9);\n    text-shadow: 0px 0px 1px rgba(255,255,255,0.8);\n}\nbutton.btn-blue-r {\n    box-shadow: \n        -1px 3px 1px 0px #1A237E,\n        -1px 3px 6px 0px rgba(0,0,0,0.8);   \n    background-color: #283593;\n    color: rgba(255,255,255,0.9);\n    text-shadow: 0px 0px 1px rgba(255,255,255,0.8);\n}\nbutton.btn-blue-l {\n    box-shadow: \n        1px 3px 1px 0px #1A237E,\n        1px 3px 6px 0px rgba(0,0,0,0.8);   \n    background-color: #283593;\n    color: rgba(255,255,255,0.9);\n    text-shadow: 0px 0px 1px rgba(255,255,255,0.8);\n}\nbutton.btn-red-ll {\n    box-shadow: \n        2px 3px 1px 0px #D32F2F,\n        2px 3px 6px 0px rgba(0,0,0,0.8);   \n    background-color: #F44336;\n}\nbutton.btn-red-l {\n    box-shadow: \n        1px 3px 1px 0px #D32F2F,\n        1px 3px 6px 0px rgba(0,0,0,0.8);   \n    background-color: #F44336;\n}\nbutton.btn-red-r {\n    box-shadow: \n        -1px 3px 1px 0px #D32F2F,\n        -1px 3px 6px 0px rgba(0,0,0,0.8);   \n    background-color: #F44336;\n}\n/* disp color : A1D2CE; */", ""]);
+	exports.push([module.id, "h1 {\n    background-color: red;\n}\n\nbody {\n    background-color: #EEEEEE;\n}\n\n.container {\n    margin-top: 20px;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n.box {\n    background-color: #546E7A;\n    border-radius: 15px;\n    width: 296px;\n    height: 460px;\n    box-shadow: \n        inset -0px -5px 12px 2px #37474F,\n        0px 10px 8px 0px rgba(0, 0, 0, 0.5),\n        0px 5px 1px 0px #37474F;\n}\n\n.display {\n    margin-top: 30px;\n    background-color: #A1D2CE;\n    height: 80px;\n    margin-bottom: 10px;\n    margin-left: 20px;\n    margin-right: 20px;\n    box-shadow: \n        0px -3px 2px 3px #37474F,\n        inset 0px 0px 1px 4px rgba(0, 0, 0, 0.5);\n    font-family: \"Orbitron\";\n    font-weight: bold;\n    font-size: 24px;\n    text-align: right;\n}\n#d-up {\n    margin-left: 15px;\n    margin-right: 15px;\n    padding-top: 15px;\n    overflow: hidden;\n}\n#d-down {\n    margin-left: 15px;\n    margin-right: 15px;\n    overflow: hidden;\n    font-size: 12px;\n    overflow-wrap: break-word;\n    height: 22px;\n    padding-top: 5px;\n}\n.buttons {\n    margin-left: 12px;\n    margin-right: 12px;\n}\nbutton {\n    width: 48px;\n    height: 48px;\n    margin: 8px;\n    padding: 0px;\n    border-radius: 8px;\n    border-style: none;\n    font-family: \"Orbitron\";\n    font-weight: bold;\n    font-size: 14px;\n    color: rgba(0,0,0,0.8);\n    text-shadow: 0px 0px 1px rgba(0,0,0,1);\n    -webkit-appearance: none;\n    -moz-appearance:    none;\n    appearance:         none;\n}\nbutton::-moz-focus-inner {\n  border: 0;\n}\nbutton.btn-wide {\n    width: 82px;\n}\n\nbutton:focus {\n    outline: none;\n}\n.button-round {\n    box-shadow: \n        2px 3px 1px 0px #1A237E,\n        2px 3px 6px 0px rgba(0,0,0,0.8);   \n    background-color: #283593;\n}\nbutton.btn-act:active {\n    box-shadow: inset 0px 2px 2px 0px rgba(0,0,0,0.9);   \n}\nbutton.btn-act-ll:active {\n    box-shadow: inset 2px 2px 2px 0px rgba(0,0,0,0.9);   \n}\nbutton.btn-act-l:active {\n    box-shadow: inset 1px 2px 2px 0px rgba(0,0,0,0.9);   \n}\nbutton.btn-act-r:active {\n    box-shadow: inset -1px 2px 2px 0px rgba(0,0,0,0.9);   \n}\nbutton.btn-act-rr:active {\n    box-shadow: inset -2px 2px 2px 0px rgba(0,0,0,0.9);   \n}\nbutton.btn-act.active {\n    box-shadow: inset 0px 2px 2px 0px rgba(0,0,0,0.9);   \n}\nbutton.btn-act-ll.active {\n    box-shadow: inset 2px 2px 2px 0px rgba(0,0,0,0.9);   \n}\nbutton.btn-act-l.active {\n    box-shadow: inset 1px 2px 2px 0px rgba(0,0,0,0.9);   \n}\nbutton.btn-act-r.active {\n    box-shadow: inset -1px 2px 2px 0px rgba(0,0,0,0.9);   \n}\nbutton.btn-act-rr.active {\n    box-shadow: inset -2px 2px 2px 0px rgba(0,0,0,0.9);   \n}\nbutton.btn-white-ll {\n    box-shadow: \n        2px 3px 1px 0px #90A4AE,\n        2px 3px 6px 0px rgba(0,0,0,0.8);   \n    background-color: #CFD8DC;\n}\nbutton.btn-white-l {\n    box-shadow: \n        1px 3px 1px 0px #90A4AE,\n        1px 3px 6px 0px rgba(0,0,0,0.8);   \n    background-color: #CFD8DC;\n}\nbutton.btn-white {\n    box-shadow: \n        0px 3px 1px 0px #90A4AE,\n        0px 3px 6px 0px rgba(0,0,0,0.8);   \n    background-color: #CFD8DC;\n}\nbutton.btn-white-r {\n    box-shadow: \n        -1px 3px 1px 0px #90A4AE,\n        -1px 3px 6px 0px rgba(0,0,0,0.8);   \n    background-color: #CFD8DC;\n}\nbutton.btn-blue-rr {\n    box-shadow: \n        -2px 3px 1px 0px #1A237E,\n        -2px 3px 6px 0px rgba(0,0,0,0.8);   \n    background-color: #283593;\n    color: rgba(255,255,255,0.9);\n    text-shadow: 0px 0px 1px rgba(255,255,255,0.8);\n}\nbutton.btn-blue-r {\n    box-shadow: \n        -1px 3px 1px 0px #1A237E,\n        -1px 3px 6px 0px rgba(0,0,0,0.8);   \n    background-color: #283593;\n    color: rgba(255,255,255,0.9);\n    text-shadow: 0px 0px 1px rgba(255,255,255,0.8);\n}\nbutton.btn-blue-l {\n    box-shadow: \n        1px 3px 1px 0px #1A237E,\n        1px 3px 6px 0px rgba(0,0,0,0.8);   \n    background-color: #283593;\n    color: rgba(255,255,255,0.9);\n    text-shadow: 0px 0px 1px rgba(255,255,255,0.8);\n}\nbutton.btn-red-ll {\n    box-shadow: \n        2px 3px 1px 0px #D32F2F,\n        2px 3px 6px 0px rgba(0,0,0,0.8);   \n    background-color: #F44336;\n}\nbutton.btn-red-l {\n    box-shadow: \n        1px 3px 1px 0px #D32F2F,\n        1px 3px 6px 0px rgba(0,0,0,0.8);   \n    background-color: #F44336;\n}\nbutton.btn-red-r {\n    box-shadow: \n        -1px 3px 1px 0px #D32F2F,\n        -1px 3px 6px 0px rgba(0,0,0,0.8);   \n    background-color: #F44336;\n}\ndiv.footer {\n    position: fixed;\n    bottom: 0px;\n    right: 5px;\n    opacity: 0.8;\n}", ""]);
 	
 	// exports
 
