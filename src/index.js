@@ -162,11 +162,11 @@ var state = {
     }
 };
 function handle_num(e) {
-    state.handle_num(this.outerText);
+    state.handle_num(this.innerText);
     $(this).blur();
 }
 function handle_oper() {
-    state.handle_oper(this.outerText);
+    state.handle_oper(this.innerText);
     $(this).blur();
 }
 function handle_exec() {
