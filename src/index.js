@@ -110,11 +110,11 @@ var state = {
             var rpn=this.make_rpn();
             this.c_num=this.resolve_rpn(rpn);
             this.c_num=(Math.round(parseFloat(this.c_num)*this.precision)/this.precision).toString();
-            if (this.c_num.length > this.max_decs) {
+            /*if (this.c_num.length > this.max_decs) {
                 this.c_num='Buffer overflow';
                 this.calc_error=true;
             }
-            else this.calc_done=true;
+            else */this.calc_done=true;
             this.render();
         }
     },
