@@ -2,8 +2,7 @@ require("./styles/style.css");
 require("jquery");
 var state = {
     calc_done: false,
-    need_num: true,
-    c_num: "0",
+    c_num: null,
     stmt : [],
     opers : {
         '+' : {
@@ -56,12 +55,13 @@ var state = {
         return ret;
     },
     reset: function() {
-        this.c_num = '0';
+        this.c_num = null;
         this.stmt = [];
         this.calc_done = false;
     },
     render: function() {
-        $('#d-up').html(this.c_num);
+        if (this.c_num === null) $('#d-up').html('0');
+        else $('#d-up').html(this.c_num);
         if (this.stmt.length === 0)
             $('#d-down').html('0');
         else
@@ -74,25 +74,23 @@ var state = {
         if (this.calc_done) {
             this.reset();
         }
-        if (this.c_num==='0') this.c_num=num;
+        if (this.c_num===null) this.c_num=num;
         else this.c_num+=num;
-        this.need_num=false;
         this.render();
     },
     handle_oper: function(o) {
-        if (this.need_num) return;
+        if (this.c_num === null) return;
         if (this.calc_done) {
             this.calc_done=false;
             this.stmt=[];
         }
         this.stmt.push(this.make_operand(this.c_num));
         this.stmt.push(this.make_operator(o));
-        this.c_num='0';
-        this.need_num=true;
+        this.c_num=null;
         this.render();
     },
     handle_exec: function() {
-        if (this.need_num) return;
+        if (this.c_num === null) return;
         if (!this.calc_done) {
             this.stmt.push(this.make_operand(this.c_num));
             var rpn=this.make_rpn();
@@ -145,15 +143,13 @@ var state = {
     },
     handle_ce: function() {
         if (!this.calc_done) {
-            if (this.c_num != '0') {
-                this.c_num='0';
-                this.need_num=true;
+            if (this.c_num != null) {
+                this.c_num=null;
             }
             else {
                 var operator=this.stmt.pop();
                 var operand=this.stmt.pop();
                 if (operand) this.c_num=operand.s;
-                this.need_num=false;
             }
             this.render();
         }
