@@ -161,17 +161,22 @@ var state = {
 };
 function handle_num(e) {
     state.handle_num(this.outerText);
+    $(this).blur();
 }
 function handle_oper() {
+    console.log('handle_oper: '+ this.outerText);
     state.handle_oper(this.outerText);
+    $(this).blur();
 }
 function handle_exec() {
     state.handle_exec();
+    $(this).blur();
 }
 function handle_key_down(e) {
     $('button#'+e.which).toggleClass('active');
 }
 function handle_key_up(e) {
+    console.log('handle_key_up:'+e.which);
     $('button#'+e.which).removeClass('active');
     if (e.which >= 96 && e.which <= 105) state.handle_num((e.which-96).toString());
     switch (e.which) {
@@ -186,9 +191,11 @@ function handle_key_up(e) {
 }
 function handle_c() {
     state.handle_c();
+    $(this).blur();
 }
 function handle_ce() {
     state.handle_ce();
+    $(this).blur();
 }
 $().ready(function() {
     $('button.b_num').on('click', handle_num);
