@@ -1,7 +1,8 @@
 require("./styles/style.css");
 require("jquery");
 var state = {
-    precision: 1000000000000,
+    precision: 10000000000,
+    max_decs: 11,
     calc_done: false,
     c_num: null,
     stmt : [],
@@ -76,7 +77,10 @@ var state = {
             this.reset();
         }
         if (this.c_num===null) this.c_num=num;
-        else this.c_num+=num;
+        else {
+            if (this.max_decs > this.c_num.length)
+                this.c_num+=num;
+        }
         this.render();
     },
     handle_oper: function(o) {
