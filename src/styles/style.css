@@ -86,6 +86,12 @@ button:focus {
     -moz-appearance:    none;
     appearance:         none;
 }
+button:hover {
+    outline: none;
+    -webkit-appearance: none;
+    -moz-appearance:    none;
+    appearance:         none;
+}
 .button-round {
     box-shadow: 
         2px 3px 1px 0px #1A237E,
