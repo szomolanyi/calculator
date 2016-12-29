@@ -48,7 +48,9 @@
 	__webpack_require__(1);
 	var state = {
 	    precision: 10000000000,
-	    max_decs: 11,
+	    MAX_NUM: 99999999999,
+	    MIN_NUM: 0.0000000001,
+	    MAX_DECIMALS: 11,
 	    calc_done: false,
 	    calc_error: false,
 	    c_num: null,
@@ -100,7 +102,11 @@
 	        var ret = {
 	            type: 'operator'
 	        };
-	        Object.assign(ret, state.opers[o]);
+	        var p_oper=state.opers[o];
+	        ret.prior=p_oper.prior;
+	        ret.s=p_oper.s;
+	        ret.exec=p_oper.exec;
+	        //Object.assign(ret, state.opers[o]); doesn't work in IE
 	        return ret;
 	    },
 	    reset: function() {
@@ -110,6 +116,11 @@
 	        this.calc_error = false;
 	    },
 	    render: function() {
+	        if (this.calc_error) {
+	            $('#d-up').html('Err');
+	            $('#d-down').html('Buffer Overflow');
+	            return;
+	        }
 	        if (this.c_num === null) $('#d-up').html('0');
 	        else $('#d-up').html(this.c_num);
 	        if (this.stmt.length === 0)
@@ -132,7 +143,7 @@
 	        }
 	        if (this.c_num===null) this.c_num=num;
 	        else {
-	            if (this.max_decs > this.c_num.length)
+	            if (this.MAX_DECIMALS > this.c_num.length)
 	                this.c_num+=num;
 	        }
 	        this.render();
@@ -154,8 +165,12 @@
 	        if (!this.calc_done) {
 	            this.stmt.push(this.make_operand(this.c_num));
 	            var rpn=this.make_rpn();
-	            this.c_num=this.resolve_rpn(rpn);
-	            this.c_num=(Math.round(parseFloat(this.c_num)*this.precision)/this.precision).toString();
+	            var result=this.resolve_rpn(rpn);
+	            if (result > this.MAX_NUM || result < this.MIN_NUM) {
+	                this.calc_error=true;
+	            }
+	            this.c_num=result.toString().substr(0, this.MAX_DECIMALS);
+	            //this.c_num=(Math.round(result*this.precision)/this.precision).toString();
 	            /*if (this.c_num.length > this.max_decs) {
 	                this.c_num='Buffer overflow';
 	                this.calc_error=true;
