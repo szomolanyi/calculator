@@ -61,35 +61,40 @@
 	            exec: function(o1, o2) {
 	                return o1+o2;
 	            },
-	            s: '+'
+	            s: '+',
+	            type:'operator'
 	        },
 	        '-' : {
 	            prior: 1,
 	            exec: function(o1, o2) {
 	                return o1-o2;
 	            },
-	            s: '-'
+	            s: '-',
+	            type:'operator'
 	        },
 	        'x' : {
 	            prior: 2,
 	            exec: function(o1, o2) {
 	                return o1*o2;
 	            },
-	            s: 'x'
+	            s: 'x',
+	            type:'operator'
 	        },
 	        '/' : {
 	            prior: 2,
 	            exec: function(o1, o2) {
 	                return o1/o2;
 	            },
-	            s: '/'
+	            s: '/',
+	            type:'operator'
 	        },
 	        '%' : {
 	            prior: 3,
 	            exec: function(o1, o2) {
 	                return (o1*o2)/100;
 	            },
-	            s: '%'
+	            s: '%',
+	            type:'operator'
 	        }
 	    },
 	    make_operand: function(o) {
@@ -99,15 +104,7 @@
 	        };
 	    },
 	    make_operator: function(o) {
-	        var ret = {
-	            type: 'operator'
-	        };
-	        var p_oper=state.opers[o];
-	        ret.prior=p_oper.prior;
-	        ret.s=p_oper.s;
-	        ret.exec=p_oper.exec;
-	        //Object.assign(ret, state.opers[o]); doesn't work in IE
-	        return ret;
+	        return state.opers[o];
 	    },
 	    reset: function() {
 	        this.c_num = null;
