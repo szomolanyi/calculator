@@ -101,7 +101,13 @@ var state = {
     },
     handle_oper: function(o) {
         this.handle_error();
-        if (this.c_num === null) return;
+        if (this.c_num === null) {
+            if (o === '-') {
+                /* negative number */
+                this.handle_num('-');
+            } 
+            return;
+        }
         if (this.calc_done) {
             this.calc_done=false;
             this.stmt=[];
@@ -117,16 +123,11 @@ var state = {
             this.stmt.push(this.make_operand(this.c_num));
             var rpn=this.make_rpn();
             var result=this.resolve_rpn(rpn);
-            if (result > this.MAX_NUM || result < this.MIN_NUM) {
+            if ((result > this.MAX_NUM) || (result > 0 && result < this.MIN_NUM)) {
                 this.calc_error=true;
             }
             this.c_num=result.toString().substr(0, this.MAX_DECIMALS);
-            //this.c_num=(Math.round(result*this.precision)/this.precision).toString();
-            /*if (this.c_num.length > this.max_decs) {
-                this.c_num='Buffer overflow';
-                this.calc_error=true;
-            }
-            else */this.calc_done=true;
+            this.calc_done=true;
             this.render();
         }
     },
